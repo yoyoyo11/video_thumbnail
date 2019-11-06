@@ -309,6 +309,42 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: const Text("File"),
               ),
+              FloatingActionButton(
+                tooltip: "YO",
+                onPressed: () async {
+                  if (_imageInFile != null) {
+                    setState(() {
+                      _imageInFile = null;
+                      _uiImageInFile = null;
+                    });
+                  }
+                  String yo = 'https://firebasestorage.googleapis.com/v0/b/hire-7dbb2.appspot.com/o/1573000398376.mp4?alt=media&token=4dfce3c4-60f2-4ee0-ba0b-b3805be6c529';
+                  final thumbnail = await VideoThumbnail.thumbnailFile(
+                      video: yo,
+                      thumbnailPath: _tempDir,
+                      imageFormat: _format,
+                      maxHeightOrWidth: _size,
+                      timeMs: _timeMs,
+                      quality: _quality);
+
+                  print("thumbnail file is located: $thumbnail");
+
+                  final file = File(thumbnail);
+                  _imageFileSize = file.lengthSync();
+                  final bytes = file.readAsBytesSync();
+
+                  print("image file size: $_imageFileSize");
+
+                  _imageInFile = Image.memory(bytes)
+                    ..image.resolve(ImageConfiguration()).addListener(
+                        ImageStreamListener((ImageInfo info, bool _) {
+                      setState(() {
+                        _uiImageInFile = info.image;
+                      });
+                    }));
+                },
+                child: const Text("YO"),
+              ),
             ],
           )),
     );
